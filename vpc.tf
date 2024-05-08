@@ -73,4 +73,77 @@ resource "aws_route_table_association" "database-association" {
   route_table_id = aws_route_table.IBM_DATABASE_ROUTE_TABLE.id
 }
 
+#  NACL for WEB (public)
 
+resource "aws_network_acl" "WEB_NACL" {
+  vpc_id = aws_vpc.IBM_VPC.id
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  tags = {
+    Name = "IBM-WEB-NACL"
+  }
+}
+
+
+#PUBLIC NETWORK ACL ASSOICATION
+resource "aws_network_acl_association" "nacl-web-association" {
+  network_acl_id = aws_network_acl.WEB_NACL.id
+  subnet_id      = aws_subnet.ibm_web_subnet.id
+}
+
+
+
+#  NACL for DATABASE (PRIVATE)
+
+resource "aws_network_acl" "DATABASE_NACL" {
+  vpc_id = aws_vpc.IBM_VPC.id
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  tags = {
+    Name = "IBM-DATABASE-NACL"
+  }
+}
+
+
+#PRIVATE NETWORK ACL ASSOICATION
+resource "aws_network_acl_association" "nacl-database-association" {
+  network_acl_id = aws_network_acl.DATABASE_NACL.id
+  subnet_id      = aws_subnet.ibm_data_subnet.id
+}
+
+
+#Security GROUP
