@@ -22,7 +22,7 @@ resource "aws_subnet" "ibm_web_subnet" {
 # PRIVATE SUBNET
 resource "aws_subnet" "ibm_data_subnet" {
   vpc_id     = aws_vpc.IBM_VPC.id
-  cidr_block = "10.0.0.0/20"
+  cidr_block = "10.0.16.0/20"
   availability_zone = "ap-south-1b"
   map_public_ip_on_launch = "false"
 
